@@ -1,0 +1,27 @@
+body {
+    background-color: #242424;
+    color: white;
+    font-family: "Jersey 15", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.appsTitle {
+    font-size: 4rem;
+}
+
+.appBorder {
+    height: 281px;
+    border: 2px solid springgreen;
+    transition: all 0.35s;
+}
+
+.container a {
+    color: white;
+    text-decoration: none;
+}
+
+.appBorder:hover {
+    transform: scale(0.97);
+    box-shadow: rgba(0, 255, 127, 0.5) 0px 0px 10px, rgba(0, 255, 127, 0.5) 0px 0px 10px;
+}
