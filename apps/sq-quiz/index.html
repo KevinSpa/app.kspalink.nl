@@ -1,165 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kspalink Apps</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <title>Quiz</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #242424;
-            color: white;
-        }
-    </style>
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
 </head>
 <body>
+
 <div class="container">
-    <div class="col-12">
-        <h1>Stride Quiz</h1>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+            <hr>
+            <h1 class="appsTitle">Available Quizzes</h1>
+            <hr>
+        </div>
     </div>
-    <div id="quiz">
-        <div class="col-12">
-            <div id="question"></div>
+    <div class="row justify-content-around">
+        <div class="col-lg-5 mt-3 appBorder d-flex justify-content-center align-items-center redirectBox" id="redirectPatterns">
+            <h1>Stride</h1>
         </div>
-        <div class="col-12">
-            <div id="answerBox">
-                <div class="col-12">
-                    <input type="text" id="answer" placeholder="Vul hier je antwoord in" class="w-100 form-control">
-                </div>
-                <div class="col-12 mt-2">
-                    <button onclick="checkAnswer()" class="btn btn-outline-primary">Controleer antwoord</button>
-                </div>
-            </div>
-        </div>
-        <div class="col-12">
-            <div id="restartQuiz" style="display: none">
-                <button onclick="restartQuiz()" class="btn btn-outline-success">Restart quiz</button>
-            </div>
-            <br><br>
-            <div id="feedback"></div>
+
+        <div class="col-lg-5 mt-3 appBorder d-flex justify-content-center align-items-center redirectBox" id="redirectSQQuiz">
+            <h1>Threat modeling</h1>
         </div>
     </div>
 </div>
 
 <script>
-    function levenshteinDistance(a, b) {
-        if (a.length === 0) return b.length;
-        if (b.length === 0) return a.length;
+    document.getElementById("redirectPatterns").addEventListener("click", function () {
+        window.location.href = 'stride';
+    });
 
-        const matrix = [];
-
-        // Initialize matrix
-        for (let i = 0; i <= b.length; i++) {
-            matrix[i] = [i];
-        }
-
-        for (let j = 0; j <= a.length; j++) {
-            matrix[0][j] = j;
-        }
-
-        // Calculate Levenshtein distance
-        for (let i = 1; i <= b.length; i++) {
-            for (let j = 1; j <= a.length; j++) {
-                if (b.charAt(i - 1) === a.charAt(j - 1)) {
-                    matrix[i][j] = matrix[i - 1][j - 1];
-                } else {
-                    matrix[i][j] = Math.min(
-                        matrix[i - 1][j - 1] + 1, // Replace
-                        matrix[i][j - 1] + 1,     // Insert
-                        matrix[i - 1][j] + 1      // Delete
-                    );
-                }
-            }
-        }
-
-        return matrix[b.length][a.length];
-    }
-
-    const questions = [
-        {question: "Waar staat de S voor in STRIDE?", answer: "Spoofing"},
-        {question: "Waar staat de T voor in STRIDE?", answer: "Tampering"},
-        {question: "Waar staat de R voor in STRIDE?", answer: "Repudiation"},
-        {question: "Waar staat de I voor in STRIDE?", answer: "Information disclosure"},
-        {question: "Waar staat de D voor in STRIDE?", answer: "Denial of service"},
-        {question: "Waar staat de E voor in STRIDE?", answer: "Elevation of privilege"},
-        {question: "Wat is threat modeling stap 1?", answer: "Indentify objectives"},
-        {question: "Wat is threat modeling stap 2?", answer: "Gather information"},
-        {question: "Wat is threat modeling stap 3?", answer: "Decompose the system"},
-        {question: "Wat is threat modeling stap 4?", answer: "Identify threats"},
-        {question: "Wat is threat modeling stap 5?", answer: "Evaluate the risk"},
-        {question: "Wat is threat modeling stap 6?", answer: "Validate"},
-
-    ];
-
-    const answerBox = document.getElementById('answerBox');
-    const restartButton = document.getElementById('restartQuiz');
-
-    let currentQuestion = 0;
-
-    function displayQuestion() {
-        document.getElementById('question').innerText = questions[currentQuestion].question;
-        document.getElementById('answer').value = '';
-        document.getElementById('feedback').innerText = '';
-    }
-
-    function restartQuiz() {
-        currentQuestion = 0;
-        displayQuestion();
-        showAnswerBox();
-    }
-
-    function hideAnswerBox() {
-        answerBox.style.display = 'none';
-        restartButton.style.display = 'block';
-    }
-
-    function showAnswerBox() {
-        answerBox.style.display = 'block';
-        restartButton.style.display = 'none';
-    }
-
-    function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-    }
-
-    function checkAnswer() {
-        const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
-        const correctAnswer = questions[currentQuestion].answer.toLowerCase();
-        const distance = levenshteinDistance(userAnswer, correctAnswer);
-        const similarityPercentage = Math.floor((1 - distance / Math.max(correctAnswer.length, userAnswer.length)) * 100);
-
-        if (similarityPercentage >= 87) {
-            // If similarity is greater than or equal to 87%, treat as correct answer
-            currentQuestion++;
-            if (currentQuestion < questions.length) {
-                displayQuestion();
-                document.getElementById('feedback').innerText = `Correct! ${capitalizeFirstLetter(correctAnswer)}`;
-            } else {
-                hideAnswerBox();
-                document.getElementById('feedback').innerText = 'Gefeliciteerd! Je hebt ' + questions.length + ' / ' + questions.length +  ' vragen voltooid.';
-            }
-        } else {
-            restartQuiz();
-            document.getElementById('feedback').innerText = `Helaas, het antwoord was: ${capitalizeFirstLetter(correctAnswer)}`;
-        }
-    }
-
-    displayQuestion();
+    document.getElementById("redirectSQQuiz").addEventListener("click", function () {
+        window.location.href = 'threat';
+    });
 </script>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-
 </body>
 </html>
